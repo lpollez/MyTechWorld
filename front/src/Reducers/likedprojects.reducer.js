@@ -1,5 +1,6 @@
 export default function(likedProjectsList=[], action) {
   if (action.type === 'addLikedProject') {
+console.log('likedProjectsListCopy : ' + likedProjectsListCopy);
     for (var i=0; i<likedProjectsList.length; i++) {
       if (likedProjectsList[i].idproject === action.project.idproject) {
         return likedProjectsList;

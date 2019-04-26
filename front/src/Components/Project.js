@@ -7,7 +7,7 @@ class Project extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      liked: false,
+      liked: this.props.isLiked,
       project: {
         name: this.props.name,
         desc: this.props.desc,

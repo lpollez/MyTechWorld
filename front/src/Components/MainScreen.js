@@ -10,8 +10,10 @@ class MainScreen extends React.Component {
   componentDidMount() {
     const ctx = this;
     // les projets
-    fetch('http://localhost:3001/projects')
+    //fetch('http://localhost:3001/projects')
+    fetch('https://capsule-exams.herokuapp.com/api/capsule/projects')
     .then(function(response){
+      console.log(response)
       return response.json();
     })
     .then(function(data) {
@@ -36,15 +38,15 @@ class MainScreen extends React.Component {
       return response.json();
     })
     .then(function(projects){
-      for (var i=0;i<projects.length;i++) {
+      for (var i=0;i<projects.data.length;i++) {
         ctx.props.addLikedProject({
-          name: projects[i].name,
-          desc:projects[i].desc,
-          stack_front: projects[i].stack_front,
-          stack_back: projects[i].stack_back,
-          pic_url: projects[i].pic_url,
-          days_spent: projects[i].days_spent,
-          idproject:projects[i].idproject
+          name: projects.data[i].name,
+          desc:projects.data[i].desc,
+          stack_front: projects.data[i].stack_front,
+          stack_back: projects.data[i].stack_back,
+          pic_url: projects.data[i].pic_url,
+          days_spent: projects.data[i].days_spent,
+          idproject:projects.data[i].idproject
         });
       }
     })
