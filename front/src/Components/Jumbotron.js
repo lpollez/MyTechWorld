@@ -1,48 +1,46 @@
-import React from 'react'
+import React from 'react';
+
+import { connect } from 'react-redux';
+import { viewLikedProjects } from '../redux/project.actions';
+
 import { Jumbotron, Button } from 'reactstrap';
-import {connect} from 'react-redux';
 
-class MyJumbotron extends React.Component {
-  render () {
-    return (
-      <div>
-        <Jumbotron style={divStyle}>
-          <h1 className="display-2" style={h1Style}>My Tech World</h1>
-          <p className="lead" style={pStyle}>10 weeks to change my life</p>
-          <p style={pStyle}>8 Fullstack projects to learn how to code</p>
-          <p className="lead">
-            <Button onClick={this.props.viewOnlyLiked} color="secondary">Discover my projects</Button>
-          </p>
-        </Jumbotron>
-      </div>
-    );
-  }
-}
+const MyJumbotron = ({ viewOnlyLiked }) => {
+  return (
+    <div>
+      <Jumbotron style={divStyle}>
+        <h1 className="display-2" style={h1Style}>
+          My Tech World
+        </h1>
+        <p className="lead" style={pStyle}>
+          10 weeks to change my life
+        </p>
+        <p style={pStyle}>8 Fullstack projects to learn how to code</p>
+        <p className="lead">
+          <Button onClick={viewOnlyLiked} color="secondary">
+            My favorite projects
+          </Button>
+        </p>
+      </Jumbotron>
+    </div>
+  );
+};
 
-const bgImage = './jumbotron.png';
+const mapDispatchToProps = dispatch => ({
+  viewOnlyLiked: () => dispatch(viewLikedProjects(true)),
+});
 
 const divStyle = {
-  height: '70vh',
-  backgroundImage: `url(${bgImage})`
+  height: '65vh',
+  backgroundImage: `url(${'./jumbotron.png'})`,
 };
 
 const h1Style = {
-  color: '#FFF'
-}
+  color: '#FFF',
+};
 
 const pStyle = {
-  color: '#FFF'
-}
+  color: '#FFF',
+};
 
-function mapDispatchToProps(dispatch) {
-  return {
-    viewOnlyLiked: function() {
-      dispatch( {type: 'viewOnlyLiked'} )
-    }
-  }
-}
-
-export default connect(
-    null,
-    mapDispatchToProps
-)(MyJumbotron);
+export default connect(null, mapDispatchToProps)(MyJumbotron);

@@ -1,88 +1,171 @@
-import React from 'react'
-import { Col, Row, Card, CardImg, CardText, CardHeader, CardBody,
-  CardTitle, CardSubtitle, Button, Badge, Progress } from 'reactstrap';
-import {connect} from 'react-redux';
+import React from 'react';
 
-class Project extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      liked: this.props.isLiked,
-      project: {
-        name: this.props.name,
-        desc: this.props.desc,
-        stack_front: this.props.stack_front,
-        stack_back: this.props.stack_back,
-        pic_url: this.props.pic_url,
-        days_spent: this.props.days_spent,
-        idproject: this.props.idproject
+import { connect } from 'react-redux';
+import {
+  addLikedProject,
+  removeLikedProject,
+  addAlert,
+} from '../redux/project.actions';
+
+import {
+  Col,
+  Row,
+  Card,
+  CardImg,
+  CardText,
+  CardHeader,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Button,
+  Badge,
+  Progress,
+} from 'reactstrap';
+
+const Project = ({
+  project: {
+    name,
+    desc,
+    stack_front,
+    stack_back,
+    pic_url,
+    days_spent,
+    idproject,
+    isLiked,
+  },
+  projects,
+  viewLikedProjects,
+  addLikedProject,
+  removeLikedProject,
+  addAlert,
+}) => {
+  const handleAddLikedProject = async () => {
+    try {
+      if (projects.filter(project => project.isLiked === true).length === 3) {
+        addAlert("Impossible d'ajouter plus de 3 projets", 'danger');
+        return;
       }
-    }
-  }
-  handleFavoriteClick = () => {
-    const liked = !this.state.liked
-    this.setState({
-      liked: liked
-    });
-    if (liked) {
-      fetch('http://localhost:3001/myprojects', {
+      const response = await fetch('http://localhost:3001/myprojects', {
         method: 'POST',
         headers: {
-           'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `name=${this.state.project.name}&desc=${this.state.project.desc}&stack_front=${this.state.project.stack_front}&stack_back=${this.state.project.stack_back}&pic_url=${this.state.project.pic_url}&days_spent=${this.state.project.days_spent}&idproject=${this.state.project.idproject}`
-      })
-      .catch((error) => {
-        console.error(error);
+        body: `name=${name}&desc=${desc}&stack_front=${stack_front}&stack_back=${stack_back}&pic_url=${pic_url}&days_spent=${days_spent}&idproject=${idproject}`,
       });
-      this.props.addLikedProject(this.state.project)
-    } else {
-      fetch(`http://localhost:3001/myprojects/${this.state.project.idproject}`, {
-        method: 'DELETE'})
-      .catch((error) => {
-        console.error(error);
-      });
-      this.props.removeLikedProject(this.state.project)
+      const data = await response.json();
+      if (data.result) {
+        addAlert('Le projet a été ajouté à votre TOP 3', 'success');
+        addLikedProject(idproject);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }
-  render () {
-    const stackFront = this.state.project.stack_front.map((stackFront, i) => <Badge color="secondary" key={i} style={{fontSize:15, marginRight:10, marginBottom:10}}>{stackFront}</Badge>)
-    const stackBack = this.state.project.stack_back.map((stackBack, i) =>  <Badge color="secondary" key={i} style={{fontSize:15, marginRight:10, marginBottom:10}}>{stackBack}</Badge>)
-    return (
-      <Col xs="12" sm="6" lg="4" style={{display: this.props.viewOnlyLike && !this.props.isLiked ? 'none' : null}}>
-        <Card>
-          <CardHeader style={{backgroundColor: '#FC6861'}}>
-              <CardImg top width="100%" src={this.state.project.pic_url} alt="Project" />
-          </CardHeader>
-          <CardBody>
-            <CardTitle style={{fontWeight: 'bold'}}>{this.state.project.name}</CardTitle>
-            <CardText>{this.state.project.desc}</CardText>
-            <CardSubtitle style={{marginTop: 10, fontWeight: 'bold'}}>Stack Front</CardSubtitle>
-            <Row className="d-flex justify-content-center flex-wrap">{stackFront}</Row>
-            <CardSubtitle style={{marginTop: 10, fontWeight: 'bold'}}>Stack Back</CardSubtitle>
-            <Row className="d-flex justify-content-center flex-wrap">{stackBack}</Row>
-            <CardText style={{marginTop: 10, fontWeight: 'bold'}}>{this.state.project.days_spent} days spent</CardText>
-            <Progress color="secondary" value={this.state.project.days_spent} max={5} style={{height:20, width:'100%', marginBottom:20}}/>
-            {this.state.liked ? <Button color="secondary" onClick={this.handleFavoriteClick}>- Favorite</Button> : <Button outline color="secondary" onClick={this.handleFavoriteClick}>+ Favorite</Button>}
-          </CardBody>
-        </Card>
-      </Col>
-    );
-  }
-}
+  };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addLikedProject: function(project) {
-      dispatch( {type: 'addLikedProject', project} )
-    },
-    removeLikedProject: function(project) {
-      dispatch( {type: 'removeLikedProject', project} )
+  const handleRemoveLikedProject = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/myprojects/${idproject}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      const data = await response.json();
+      if (data.result) {
+        addAlert('Le projet a été supprimé de votre TOP 3', 'dark');
+        removeLikedProject(idproject);
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }
-}
+  };
 
-export default connect(
-    null,
-    mapDispatchToProps
-)(Project);
+  const stackFront = stack_front.map((item, i) => (
+    <Badge
+      color="secondary"
+      key={i}
+      style={{ fontSize: 15, marginRight: 10, marginBottom: 10 }}
+    >
+      {item}
+    </Badge>
+  ));
+
+  const stackBack = stack_back.map((item, i) => (
+    <Badge
+      color="secondary"
+      key={i}
+      style={{ fontSize: 15, marginRight: 10, marginBottom: 10 }}
+    >
+      {item}
+    </Badge>
+  ));
+
+  return (
+    <Col
+      xs="12"
+      sm="6"
+      lg="4"
+      style={{
+        display: viewLikedProjects && !isLiked ? 'none' : null,
+      }}
+    >
+      <Card style={cartStyle}>
+        <CardHeader style={{ backgroundColor: '#FC6861' }}>
+          <CardImg top width="100%" src={pic_url} alt="Project" />
+        </CardHeader>
+        <CardBody>
+          <CardTitle style={{ fontWeight: 'bold' }}>{name}</CardTitle>
+          <CardText>{desc}</CardText>
+          <CardSubtitle style={{ marginTop: 10, fontWeight: 'bold' }}>
+            Stack Front
+          </CardSubtitle>
+          <Row className="d-flex justify-content-center flex-wrap">
+            {stackFront}
+          </Row>
+          <CardSubtitle style={{ marginTop: 10, fontWeight: 'bold' }}>
+            Stack Back
+          </CardSubtitle>
+          <Row className="d-flex justify-content-center flex-wrap">
+            {stackBack}
+          </Row>
+          <CardText style={{ marginTop: 10, fontWeight: 'bold' }}>
+            {days_spent} days spent
+          </CardText>
+          <Progress
+            color="secondary"
+            value={days_spent}
+            max={5}
+            style={{ height: 20, width: '100%', marginBottom: 20 }}
+          />
+          {isLiked ? (
+            <Button color="secondary" onClick={handleRemoveLikedProject}>
+              - Favorite
+            </Button>
+          ) : (
+            <Button outline color="secondary" onClick={handleAddLikedProject}>
+              + Favorite
+            </Button>
+          )}
+        </CardBody>
+      </Card>
+    </Col>
+  );
+};
+
+const mapStateToProps = state => ({
+  projects: state.project.projects,
+  viewLikedProjects: state.viewLikedProjects,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addLikedProject: idproject => dispatch(addLikedProject(idproject)),
+  removeLikedProject: idproject => dispatch(removeLikedProject(idproject)),
+  addAlert: (color, message) => dispatch(addAlert(color, message)),
+});
+
+const cartStyle = {
+  minHeight: '800px',
+  marginBottom: '20px',
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Project);

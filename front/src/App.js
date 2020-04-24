@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import MainScreen from './Components/MainScreen'
+import MainScreen from './components/MainScreen';
 
-import projectsList from './Reducers/projects.reducer.js';
-import likedProjectsList from './Reducers/likedprojects.reducer.js';
-import viewOnlyLike from './Reducers/viewonlylike.reducer.js';
+import projectReducer from './redux/project.reducer';
 
-import {Provider} from 'react-redux';
-import {createStore, combineReducers}  from 'redux';
+import { Provider } from 'react-redux';
+import { createStore, combineReducers } from 'redux';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
-const store = createStore(combineReducers({projectsList, viewOnlyLike, likedProjectsList}));
+const store = createStore(combineReducers({ project: projectReducer }));
 
 class App extends Component {
   render() {
