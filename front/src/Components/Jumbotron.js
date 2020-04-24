@@ -10,7 +10,7 @@ const MyJumbotron = ({ viewOnlyLiked }) => {
     <div>
       <Jumbotron style={jumboStyle}>
         <div>
-          <h1 className="display-2" style={titleStyle}>
+          <h1 className="display-3" style={titleStyle}>
             My Tech World
           </h1>
           <p className="lead" style={textStyle}>
