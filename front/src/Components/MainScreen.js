@@ -19,10 +19,14 @@ const MainScreen = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = await fetch('http://localhost:3001/projects');
+        let response = await fetch(
+          'https://my-tech-world-backend.herokuapp.com/projects'
+        );
         let data = await response.json();
         initProjects(data.projects.projects);
-        response = await fetch('http://localhost:3001/myprojects');
+        response = await fetch(
+          'https://my-tech-world-backend.herokuapp.com/myprojects'
+        );
         data = await response.json();
         data.projects.forEach(project => {
           addLikedProject(project.idproject);

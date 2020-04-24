@@ -45,13 +45,16 @@ const Project = ({
         addAlert("Impossible d'ajouter plus de 3 projets", 'danger');
         return;
       }
-      const response = await fetch('http://localhost:3001/myprojects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `name=${name}&desc=${desc}&stack_front=${stack_front}&stack_back=${stack_back}&pic_url=${pic_url}&days_spent=${days_spent}&idproject=${idproject}`,
-      });
+      const response = await fetch(
+        'https://my-tech-world-backend.herokuapp.com/myprojects',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `name=${name}&desc=${desc}&stack_front=${stack_front}&stack_back=${stack_back}&pic_url=${pic_url}&days_spent=${days_spent}&idproject=${idproject}`,
+        }
+      );
       const data = await response.json();
       if (data.result) {
         addAlert('Le projet a été ajouté à votre TOP 3', 'success');
@@ -65,7 +68,7 @@ const Project = ({
   const handleRemoveLikedProject = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/myprojects/${idproject}`,
+        `https://my-tech-world-backend.herokuapp.com/myprojects/${idproject}`,
         {
           method: 'DELETE',
         }
