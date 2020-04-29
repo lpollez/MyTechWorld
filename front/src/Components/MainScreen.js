@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-
 import Navbar from './Navbar';
 import Jumbotron from './Jumbotron';
-import Project from './Project';
+import Projects from './Projects';
 import Footer from './Footer';
 
 import { connect } from 'react-redux';
@@ -38,18 +37,29 @@ const MainScreen = ({
     fetchData();
   }, []);
 
-  const likedProjects = projects.filter(project => project.isLiked === true);
-  const renderProjects = viewLikedProjects ? (
-    likedProjects.length === 0 ? (
-      <p style={top3Style}>Aucun projet dans le TOP 3</p>
-    ) : (
-      likedProjects.map((project, index) => (
-        <Project key={index} project={project} />
-      ))
-    )
-  ) : (
-    projects.map((project, index) => <Project key={index} project={project} />)
-  );
+  let renderProjects = [];
+  if (viewLikedProjects) {
+    const likedProjects = projects.filter(project => project.isLiked === true);
+    renderProjects =
+      likedProjects.length === 0 ? (
+        <p
+          style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#FC6861',
+            marginBottom: 40,
+            width: '100%',
+            textAlign: 'center',
+          }}
+        >
+          Aucun projet dans le TOP 3
+        </p>
+      ) : (
+        <Projects projects={likedProjects} />
+      );
+  } else {
+    renderProjects = <Projects projects={projects} />;
+  }
 
   return (
     <div>
@@ -57,7 +67,7 @@ const MainScreen = ({
       <Jumbotron />
       <Row>
         <Container>
-          <Row>{renderProjects}</Row>
+          <Row> {renderProjects}</Row>
         </Container>
       </Row>
       <Footer />
@@ -74,14 +84,5 @@ const mapDispatchToProps = dispatch => ({
   initProjects: projects => dispatch(initProjects(projects)),
   addLikedProject: projectId => dispatch(addLikedProject(projectId)),
 });
-
-const top3Style = {
-  fontSize: 24,
-  fontWeight: 'bold',
-  color: '#FC6861',
-  marginBottom: 40,
-  width: '100%',
-  textAlign: 'center',
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

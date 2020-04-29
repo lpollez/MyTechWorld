@@ -1,12 +1,10 @@
 import React from 'react';
-
 import { connect } from 'react-redux';
 import {
   addLikedProject,
   removeLikedProject,
   addAlert,
 } from '../redux/project.actions';
-
 import {
   Col,
   Row,
@@ -104,15 +102,8 @@ const Project = ({
   ));
 
   return (
-    <Col
-      xs="12"
-      sm="6"
-      lg="4"
-      style={{
-        display: viewLikedProjects && !isLiked ? 'none' : null,
-      }}
-    >
-      <Card style={cartStyle}>
+    <Col xs="12" sm="6" lg="4">
+      <Card style={{ minHeight: '800px', marginBottom: '20px' }}>
         <CardHeader style={{ backgroundColor: '#FC6861' }}>
           <CardImg top width="100%" src={pic_url} alt="Project" />
         </CardHeader>
@@ -165,10 +156,5 @@ const mapDispatchToProps = dispatch => ({
   removeLikedProject: idproject => dispatch(removeLikedProject(idproject)),
   addAlert: (color, message) => dispatch(addAlert(color, message)),
 });
-
-const cartStyle = {
-  minHeight: '800px',
-  marginBottom: '20px',
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Project);

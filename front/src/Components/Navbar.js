@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-
 import AlertMessage from './Alert';
-
 import { connect } from 'react-redux';
 import { viewLikedProjects } from '../redux/project.actions';
 
@@ -23,7 +21,10 @@ const MyNavbar = ({ viewOnlyLiked, viewAll, alerts }) => {
   return (
     <div>
       <Navbar color="white" light expand="md" fixed="top">
-        <NavbarBrand className="mainColor" style={{ fontWeight: 'bold' }}>
+        <NavbarBrand
+          className="mainColor"
+          style={{ fontWeight: 'bold', color: '#FC6861' }}
+        >
           My Tech World
         </NavbarBrand>
         <NavbarToggler onClick={toggle} style={{ marginRight: '10px' }} />
@@ -39,7 +40,16 @@ const MyNavbar = ({ viewOnlyLiked, viewAll, alerts }) => {
         </Collapse>
         {alerts.map((alert, index) =>
           !alert.render ? (
-            <div key={index} style={alertStyle}>
+            <div
+              key={index}
+              style={{
+                position: 'fixed',
+                left: 0,
+                top: 0,
+                width: '100%',
+                zIndex: 99,
+              }}
+            >
               <AlertMessage message={alert.message} color={alert.color} />
             </div>
           ) : null
@@ -58,13 +68,5 @@ const mapDispatchToProps = dispatch => ({
   viewOnlyLiked: () => dispatch(viewLikedProjects(true)),
   viewAll: () => dispatch(viewLikedProjects(false)),
 });
-
-const alertStyle = {
-  position: 'fixed',
-  left: 0,
-  top: 0,
-  width: '100%',
-  zIndex: 99,
-};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyNavbar);
