@@ -19,12 +19,12 @@ const MainScreen = ({
     const fetchData = async () => {
       try {
         let response = await fetch(
-          'https://my-tech-world-backend.herokuapp.com/projects'
+          'https://my-techworld-backend.netlify.app/.netlify/functions/server/projects'
         );
         let data = await response.json();
         initProjects(data.projects.projects);
         response = await fetch(
-          'https://my-tech-world-backend.herokuapp.com/myprojects'
+          'https://my-techworld-backend.netlify.app/.netlify/functions/server/myprojects'
         );
         data = await response.json();
         data.projects.forEach(project => {

@@ -44,7 +44,7 @@ const Project = ({
         return;
       }
       const response = await fetch(
-        'https://my-tech-world-backend.herokuapp.com/myprojects',
+        'https://my-techworld-backend.netlify.app/.netlify/functions/server/myprojects',
         {
           method: 'POST',
           headers: {
@@ -66,7 +66,7 @@ const Project = ({
   const handleRemoveLikedProject = async () => {
     try {
       const response = await fetch(
-        `https://my-tech-world-backend.herokuapp.com/myprojects/${idproject}`,
+        `https://my-techworld-backend.netlify.app/.netlify/functions/server/myprojects/${idproject}`,
         {
           method: 'DELETE',
         }
